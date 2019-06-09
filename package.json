@@ -18,8 +18,7 @@
   "flags": [
     "-lsodium",
     "-std=c++2a",
-    "-stdlib=libc++",
-    "-O3"
+    "-stdlib=libc++"
   ],
   "files": [
     "index.hxx",

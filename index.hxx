@@ -33,7 +33,7 @@ namespace Hyper {
     std::string base64Encode(const std::string& str);
 
     ///
-    /// function base64Encode(const std::string& str)
+    /// function base64Decode(const std::string& str)
     /// comment decodes a base64 encoded string.
     /// param str the string to be decoded.
     ///

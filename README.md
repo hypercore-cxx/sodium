@@ -22,7 +22,7 @@ build test
 
 ```c++
 auto r = Hyper::Sodium::randomBytes(128);
-// r.size() == size
+// r.size() == 128
 
 auto encoded = Hyper::Sodium::base64Encode("Hello, world!");
 // encoded == "SGVsbG8sIHdvcmxkIQ=="

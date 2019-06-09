@@ -8,10 +8,7 @@
   "dependencies": {},
   "license": "MIT",
   "scripts": {
-    "test": [
-      "clang++ -std=c++2a -stdlib=libc++ -lsodium",
-      "test/index.cxx -o test/index && ./test/index"
-    ],
+    "test": "clang++ test/index.cxx -o test/index && ./test/index",
     "getsodium": "node install.js",
     "install": "build find sodium || build run getsodium"
   },

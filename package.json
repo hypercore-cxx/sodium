@@ -1,9 +1,9 @@
 {
-  "name": "libsodium",
-  "description": "libsodium helper",
+  "name": "sodium",
+  "description": "libsodium functions",
   "repository": {
     "type": "git",
-    "url": "git@github.com:datcxx/libsodium.git"
+    "url": "git@github.com:datcxx/sodium.git"
   },
   "dependencies": {},
   "license": "MIT",

@@ -1,0 +1,31 @@
+{
+  "name": "libsodium",
+  "description": "libsodium helper",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:datcxx/libsodium.git"
+  },
+  "dependencies": {},
+  "license": "MIT",
+  "scripts": {
+    "test": [
+      "clang++ -std=c++2a -stdlib=libc++ -lsodium",
+      "test/index.cxx -o test/index && ./test/index"
+    ],
+    "getsodium": "node install.js",
+    "install": "build find sodium || build run getsodium"
+  },
+  "flags": [
+    "-lsodium",
+    "-std=c++2a",
+    "-stdlib=libc++",
+    "-O3"
+  ],
+  "files": [
+    "index.hxx",
+    "index.cxx"
+  ],
+  "devDependencies": {
+    "git@github.com:heapwolf/cxx-tap": "07821de0"
+  }
+}

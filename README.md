@@ -25,7 +25,7 @@ auto r = Hyper::Sodium::randomBytes(128);
 // r.size() == size
 
 auto encoded = Hyper::Sodium::base64Encode("Hello, world!");
-// encoded == SGVsbG8sIHdvcmxkIQ==
+// encoded == "SGVsbG8sIHdvcmxkIQ=="
 
 auto decoded = Hyper::Sodium::base64Decode(encoded);
 // decoded == "Hello, world!"

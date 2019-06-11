@@ -4,6 +4,8 @@
 #include <string>
 #include <sodium.h>
 
+#include "deps/datcxx/buffer/index.hxx"
+
 ///
 /// namespace Hyper
 ///
@@ -12,6 +14,8 @@ namespace Hyper {
   /// namespace Sodium
   ///
   namespace Sodium {
+    using Buf = Util::Buffer<uint8_t>;
+
     ///
     /// function randomBytes(size_t size)
     /// comment https://libsodium.gitbook.io/doc/generating_random_data#usage
@@ -23,24 +27,15 @@ namespace Hyper {
     std::string randomBytes(size_t size);
 
     ///
-    /// function base64Encode(const std::string& str)
-    /// comment base64 encodes a string.
-    /// param str the string to be encoded.
+    /// function genericHash(const std::string& str)
+    /// comment Generate a generic hash.
+    /// param str the string to be hashed.
     ///
     /// return std::string
-    /// comment provides the base64 encoded string.
+    /// comment the result from hashing the input.
     ///
-    std::string base64Encode(const std::string& str);
+    void genericHash(Buf& out, const Buf& in);
 
-    ///
-    /// function base64Decode(const std::string& str)
-    /// comment decodes a base64 encoded string.
-    /// param str the string to be decoded.
-    ///
-    /// return std::string
-    /// comment provides the decoded string.
-    ///
-    std::string base64Decode(const std::string& str);
   } // namespace Sodium
 } // namespace Hyper
 

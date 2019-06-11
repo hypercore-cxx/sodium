@@ -5,7 +5,6 @@
     "type": "git",
     "url": "git@github.com:datcxx/sodium.git"
   },
-  "dependencies": {},
   "license": "MIT",
   "scripts": {
     "test": "clang++ test/index.cxx -o test/index && ./test/index",
@@ -23,5 +22,9 @@
   ],
   "devDependencies": {
     "git@github.com:heapwolf/cxx-tap": "07821de0"
+  },
+  "dependencies": {
+    "git@github.com:datcxx/buffer": "ab15ae81",
+    "git@github.com:datcxx/sodium-encodedecode": "345051bd"
   }
 }

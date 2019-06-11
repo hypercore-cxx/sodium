@@ -2,14 +2,8 @@
 #include <sodium.h>
 
 #include "../deps/heapwolf/cxx-tap/index.hxx"
+#include "../deps/datcxx/buffer/index.hxx"
 #include "../index.hxx"
-
-static const char chars[] =
-"0123456789"
-"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-"abcdefghijklmnopqrstuvwxyz";
-
-int stringLength = sizeof(chars) - 1;
 
 int main() {
   TAP::Test t;
@@ -39,31 +33,15 @@ int main() {
     t->end();
   });
 
-  t.test("base64 encode", [](auto t) {
-    std::string str = "Hello, world!";
+  t.test("generic hash", [](auto t) {
+    Hyper::Util::Buffer<uint8_t> in("Hello, world!");
+    Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES_MAX);
 
-    auto expectedEncoded = std::string("SGVsbG8sIHdvcmxkIQ==");
-    expectedEncoded.push_back('\0');
+    Hyper::Sodium::genericHash(out, in);
 
-    auto encoded = Hyper::Sodium::base64Encode(str);
-    t->equal(encoded, expectedEncoded, "matches gnu output");
-    t->end();
-  });
+    std::string expected = "511bc81dde11180838c562c82bb35f3223f46061ebde4a955c27b3f489cf1e03";
 
-  t.test("base64 encode/decode random size", [](auto t) {
-
-    std::string str;
-    const int r = rand() % stringLength + 1;
-    t->comment("encoding " + std::to_string(r) + " bytes");
-
-    for (int i = 0; i < r; i++) {
-      str.push_back(chars[rand() % stringLength]);
-    }
-
-    auto encoded = Hyper::Sodium::base64Encode(str);
-    auto decoded = Hyper::Sodium::base64Decode(encoded);
-    t->equal(decoded, str, "decoded expected");
-
+    t->equal(out.toString("hex"), expected, "hashed buffer");
     t->end();
   });
 }

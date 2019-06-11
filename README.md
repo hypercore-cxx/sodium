@@ -25,12 +25,6 @@ build test
 
 auto r = Hyper::Sodium::randomBytes(128);
 // r.size() == 128
-
-auto encoded = Hyper::Sodium::base64Encode("Hello, world!");
-// encoded == "SGVsbG8sIHdvcmxkIQ=="
-
-auto decoded = Hyper::Sodium::base64Decode(encoded);
-// decoded == "Hello, world!"
 ```
 
 

@@ -34,13 +34,13 @@ int main() {
   });
 
   t.test("generic hash", [](auto t) {
-    Hyper::Util::Buffer<uint8_t> in("Hello, world!");
+    Hyper::Util::Buffer<uint8_t> in("Hello, World!");
 
     {
       Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES);
       Hyper::Sodium::genericHash(out, in);
 
-      std::string expected = "511bc81dde11180838c562c82bb35f823f46061ebde4a955c27b3f489cf1e03";
+      std::string expected = "511bc81dde11180838c562c82bb35f3223f46061ebde4a955c27b3f489cf1e03";
       t->equal(out.toString("hex"), expected, "hashed buffer");
     }
 

@@ -62,4 +62,21 @@ int main() {
 
     t->end();
   });
+
+  t.test("generic hash with key", [](auto t) {
+    Hyper::Util::Buffer<uint8_t> in("Hello, World!");
+    Hyper::Util::Buffer<uint8_t> buf(crypto_generichash_KEYBYTES);
+
+    auto key = buf.fill("lo");
+
+    {
+      Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES);
+      Hyper::Sodium::genericHash(out, in, key);
+
+      std::string expected = "f4113fe33d43c24c54627d40efa1a78838d4a6d689fd6e83c213848904fffa8c";
+      t->equal(out.toString("hex"), expected, "hashed buffer");
+    }
+
+    t->end();
+  });
 }

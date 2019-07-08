@@ -27,6 +27,17 @@ namespace Hyper {
       );
     }
 
+    void genericHash(Buf& out, const Buf& in, const Buf& key) {
+      crypto_generichash(
+        &out.value[0],
+        out.value.size(),
+        &in.value[0],
+        in.value.size(),
+        &key.value[0],
+        key.value.size()
+      );
+    }
+
   } // namespace Sodium
 } // namespace Hyper
 

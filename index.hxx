@@ -35,6 +35,7 @@ namespace Hyper {
     /// comment the result from hashing the input.
     ///
     void genericHash(Buf& out, const Buf& in);
+    void genericHash(Buf& out, const Buf& in, const Buf& key);
 
   } // namespace Sodium
 } // namespace Hyper

@@ -24,7 +24,7 @@
     "git@github.com:heapwolf/cxx-tap": "e1f45be9"
   },
   "dependencies": {
-    "git@github.com:datcxx/buffer": "400b91d3",
+    "git@github.com:datcxx/buffer": "c0b73b9f",
     "git@github.com:datcxx/sodium-encodedecode": "345051bd"
   }
 }

@@ -8,6 +8,54 @@ namespace Hyper {
   using Buf = Util::Buffer<uint8_t>;
 
   namespace Sodium {
+    MultipartHash::MultipartHash (size_t hashSize) {
+      crypto_generichash_init(
+        &this->state,
+        nullptr,
+        0,
+        hashSize
+      );
+    }
+
+    MultipartHash::MultipartHash (const Buf& key, size_t hashSize) {
+      crypto_generichash_init(
+        &this->state,
+        &key.value[0],
+        key.value.size(),
+        hashSize
+      );
+    }
+
+    void MultipartHash::update (const Buf& buf) {
+      crypto_generichash_update(
+        &this->state,
+        &buf.value[0],
+        buf.value.size()
+      );
+    }
+
+    void MultipartHash::update (const std::string str) {
+      Buf buf(str);
+
+      crypto_generichash_update(
+        &this->state,
+        &buf.value[0],
+        buf.value.size()
+      );
+    }
+
+    Buf MultipartHash::final (size_t size) {
+      Buf res(size);
+
+      crypto_generichash_final(
+        &this->state,
+        &res.value[0],
+        res.value.size()
+      );
+
+      return res;
+    }
+
     std::string randomBytes(const size_t size) {
         const std::string s(size, 0);
         const auto d = const_cast<char*>(s.data());

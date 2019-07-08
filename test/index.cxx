@@ -94,4 +94,49 @@ int main() {
 
     t->end();
   });
+
+  t.test("generic multipart hash", [](auto t) {
+    Hyper::Sodium::MultipartHash mph(crypto_generichash_BYTES);
+    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+
+    for (size_t i = 0; i < 10; i++) {
+      mph.update(filler);
+    }
+
+    auto out = mph.final(crypto_generichash_BYTES);
+
+    t->equal(out.toString("hex"), "cbc20f347f5dfe37dc13231cbf7eaa4ec48e585ec055a96839b213f62bd8ce00", "streaming hash");
+    t->end();
+  });
+
+  t.test("crypto_generichash_instance with key", [](auto t) {
+    Hyper::Util::Buffer<uint8_t> keyBuf(crypto_generichash_KEYBYTES);
+    auto key = keyBuf.fill("lo");
+
+    Hyper::Sodium::MultipartHash mph(key, crypto_generichash_BYTES);
+    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+
+    for (size_t i = 0; i < 10; i++) {
+      mph.update(filler);
+    }
+
+    auto out = mph.final(crypto_generichash_BYTES);
+
+    t->equal(out.toString("hex"), "405f14acbeeb30396b8030f78e6a84bab0acf08cb1376aa200a500f669f675dc", "streaming hash");
+    t->end();
+  });
+
+  t.test("crypto_generichash_instance with hash length", [](auto t) {
+    Hyper::Sodium::MultipartHash mph(crypto_generichash_BYTES_MIN);
+    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+
+    for (size_t i = 0; i < 10; i++) {
+      mph.update(filler);
+    }
+
+    auto out = mph.final(crypto_generichash_BYTES_MIN);
+
+    t->equal(out.toString("hex"), "decacdcc3c61948c79d9f8dee5b6aa99", "streaming short hash");
+    t->end();
+  });
 }

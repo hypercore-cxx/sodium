@@ -17,6 +17,63 @@ namespace Hyper {
     using Buf = Util::Buffer<uint8_t>;
 
     ///
+    /// class MultipartHash
+    /// comment Provides a way to create, update and digest generic hashes.
+    ///
+    class MultipartHash {
+      crypto_generichash_state state;
+
+      public:
+
+        ///
+        /// constructor MultipartHash(size_t size)
+        /// comment creates a hash that can be updated.
+        ///
+        /// param size the specified output size.
+        ///
+        MultipartHash (size_t size);
+
+        ///
+        /// constructor MultipartHash(const Buf& key, size_t size)
+        /// comment creates a hash that can be updated.
+        ///
+        /// param key a buffer containing a key.
+        /// param size the specified output size.
+        ///
+        MultipartHash (const Buf& key, size_t size);
+
+        ///
+        /// method update(const Buf& buf)
+        /// comment update the instance of the hash.
+        ///
+        /// param buf the buffer to be used as the update value.
+        ///
+        /// return void
+        ///
+        void update (const Buf& buf);
+
+        ///
+        /// method update(const std::string str)
+        /// comment update the instance of the hash.
+        ///
+        /// param buf the string to be used as the update value.
+        ///
+        /// return void
+        ///
+        void update (const std::string str);
+
+        ///
+        /// method final(size_t size)
+        /// commment get the final value as a buffer.
+        ///
+        /// params size the size of the buffer to be returned.
+        ///
+        /// return Hyper::Util::Buffer<uint8_t>
+        ///
+        Buf final (size_t size);
+    };
+
+    ///
     /// function randomBytes(size_t size)
     /// comment https://libsodium.gitbook.io/doc/generating_random_data#usage
     /// param size the total number of random bytes produced.

@@ -5,7 +5,10 @@
 #include "../deps/datcxx/buffer/index.hxx"
 #include "../index.hxx"
 
+using Buf = Hyper::Util::Buffer<uint8_t>;
+
 int main() {
+
   TAP::Test t;
 
   t.test("sanity", [](auto t) {
@@ -34,7 +37,7 @@ int main() {
   });
 
   t.test("generic hash", [](auto t) {
-    Hyper::Util::Buffer<uint8_t> in("Hello, World!");
+    Buf in("Hello, World!");
 
     {
       auto size = crypto_generichash_BYTES;
@@ -64,8 +67,8 @@ int main() {
   });
 
   t.test("generic hash with key", [](auto t) {
-    Hyper::Util::Buffer<uint8_t> in("Hello, World!");
-    Hyper::Util::Buffer<uint8_t> buf(crypto_generichash_KEYBYTES);
+    Buf in("Hello, World!");
+    Buf buf(crypto_generichash_KEYBYTES);
 
     auto key = buf.fill("lo");
 
@@ -96,47 +99,89 @@ int main() {
   });
 
   t.test("generic multipart hash", [](auto t) {
-    Hyper::Sodium::MultipartHash mph(crypto_generichash_BYTES);
-    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+    Hyper::Sodium::MultiPart mp(crypto_generichash_BYTES);
+    Buf filler("Hej, Verden");
 
     for (size_t i = 0; i < 10; i++) {
-      mph.update(filler);
+      mp.update(filler);
     }
 
-    auto out = mph.final(crypto_generichash_BYTES);
+    auto out = mp.final();
 
     t->equal(out.toString("hex"), "cbc20f347f5dfe37dc13231cbf7eaa4ec48e585ec055a96839b213f62bd8ce00", "streaming hash");
     t->end();
   });
 
   t.test("crypto_generichash_instance with key", [](auto t) {
-    Hyper::Util::Buffer<uint8_t> keyBuf(crypto_generichash_KEYBYTES);
+    Buf keyBuf(crypto_generichash_KEYBYTES);
     auto key = keyBuf.fill("lo");
 
-    Hyper::Sodium::MultipartHash mph(key, crypto_generichash_BYTES);
-    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+    Hyper::Sodium::MultiPart mp(key, crypto_generichash_BYTES);
+    Buf filler("Hej, Verden");
 
     for (size_t i = 0; i < 10; i++) {
-      mph.update(filler);
+      mp.update(filler);
     }
 
-    auto out = mph.final(crypto_generichash_BYTES);
+    auto out = mp.final();
 
     t->equal(out.toString("hex"), "405f14acbeeb30396b8030f78e6a84bab0acf08cb1376aa200a500f669f675dc", "streaming hash");
     t->end();
   });
 
   t.test("crypto_generichash_instance with hash length", [](auto t) {
-    Hyper::Sodium::MultipartHash mph(crypto_generichash_BYTES_MIN);
-    Hyper::Util::Buffer<uint8_t> filler("Hej, Verden");
+    Hyper::Sodium::MultiPart mp(crypto_generichash_BYTES_MIN);
+    Buf filler("Hej, Verden");
 
     for (size_t i = 0; i < 10; i++) {
-      mph.update(filler);
+      mp.update(filler);
     }
 
-    auto out = mph.final(crypto_generichash_BYTES_MIN);
+    auto out = mp.final();
 
     t->equal(out.toString("hex"), "decacdcc3c61948c79d9f8dee5b6aa99", "streaming short hash");
+    t->end();
+  });
+
+  t.test("crypto_generichash_instance with key and hash length", [](auto t) {
+    Buf keyBuf(crypto_generichash_KEYBYTES);
+    auto key = keyBuf.fill("lo");
+
+    Hyper::Sodium::MultiPart mp(key, crypto_generichash_BYTES_MIN);
+    Buf filler("Hej, Verden");
+
+    for (size_t i = 0; i < 10; i++) {
+      mp.update(filler);
+    }
+
+    auto out = mp.final();
+
+    t->equal(out.toString("hex"), "fb43f0ab6872cbfd39ec4f8a1bc6fb37", "streaming short keyed hash");
+    t->end();
+  });
+
+  t.test("crypto_generichash_batch", [](auto t) {
+    Buf filler("Hej, Verden");
+    std::vector<Buf> batch;
+
+    for (size_t i = 0; i < 10; i++) batch.push_back(filler);
+
+    auto out = Hyper::Sodium::genericHashBatch(batch, crypto_generichash_BYTES);
+    t->equal(out.toString("hex"), "cbc20f347f5dfe37dc13231cbf7eaa4ec48e585ec055a96839b213f62bd8ce00", "batch hash");
+    t->end();
+  });
+
+  t.test("crypto_generichash_batch with key", [](auto t) {
+    Buf keyBuf(crypto_generichash_KEYBYTES);
+    auto key = keyBuf.fill("lo");
+
+    Buf filler("Hej, Verden");
+    std::vector<Buf> batch;
+
+    for (size_t i = 0; i < 10; i++) batch.push_back(filler);
+
+    auto out = Hyper::Sodium::genericHashBatch(batch, key, crypto_generichash_BYTES);
+    t->equal(out.toString("hex"), "405f14acbeeb30396b8030f78e6a84bab0acf08cb1376aa200a500f669f675dc", "batch keyed hash");
     t->end();
   });
 }

@@ -8,25 +8,25 @@ namespace Hyper {
   using Buf = Util::Buffer<uint8_t>;
 
   namespace Sodium {
-    MultipartHash::MultipartHash (size_t hashSize) {
+    MultiPart::MultiPart (size_t size) : hashSize(size) {
       crypto_generichash_init(
         &this->state,
         nullptr,
         0,
-        hashSize
+        this->hashSize
       );
     }
 
-    MultipartHash::MultipartHash (const Buf& key, size_t hashSize) {
+    MultiPart::MultiPart (const Buf& key, size_t size) : hashSize(size) {
       crypto_generichash_init(
         &this->state,
         &key.value[0],
         key.value.size(),
-        hashSize
+        this->hashSize
       );
     }
 
-    void MultipartHash::update (const Buf& buf) {
+    void MultiPart::update (const Buf& buf) {
       crypto_generichash_update(
         &this->state,
         &buf.value[0],
@@ -34,7 +34,7 @@ namespace Hyper {
       );
     }
 
-    void MultipartHash::update (const std::string str) {
+    void MultiPart::update (const std::string str) {
       Buf buf(str);
 
       crypto_generichash_update(
@@ -44,8 +44,8 @@ namespace Hyper {
       );
     }
 
-    Buf MultipartHash::final (size_t size) {
-      Buf res(size);
+    Buf MultiPart::final () {
+      Buf res(this->hashSize);
 
       crypto_generichash_final(
         &this->state,
@@ -93,6 +93,52 @@ namespace Hyper {
 
       return out;
     }
+
+    Buf genericHashBatch(std::vector<Buf> batch, size_t size) {
+      Buf res(size);
+
+      crypto_generichash_state state;
+      crypto_generichash_init(&state, nullptr, 0, size);
+
+      for (auto& buf : batch) {
+        crypto_generichash_update(
+          &state,
+          &buf.value[0],
+          buf.value.size()
+        );
+      }
+
+      crypto_generichash_final(
+        &state,
+        &res.value[0],
+        res.value.size()
+      );
+
+      return res;
+    };
+
+    Buf genericHashBatch(std::vector<Buf> batch, const Buf& key, size_t size) {
+      Buf res(size);
+
+      crypto_generichash_state state;
+      crypto_generichash_init(&state, &key.value[0], key.value.size(), size);
+
+      for (auto& buf : batch) {
+        crypto_generichash_update(
+          &state,
+          &buf.value[0],
+          buf.value.size()
+        );
+      }
+
+      crypto_generichash_final(
+        &state,
+        &res.value[0],
+        res.value.size()
+      );
+
+      return res;
+    };
 
   } // namespace Sodium
 } // namespace Hyper

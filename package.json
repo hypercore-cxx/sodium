@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "clang++ test/index.cxx -o test/index && ./test/index",
+    "test": "clang++ test/index.cxx test/generic.cxx -o test/index && ./test/index",
     "getsodium": "node install.js",
     "install": "build find sodium || build run getsodium"
   },
@@ -21,7 +21,7 @@
     "index.cxx"
   ],
   "devDependencies": {
-    "git@github.com:heapwolf/cxx-tap": "e1f45be9"
+    "git@github.com:heapwolf/cxx-tap": "d373e4be"
   },
   "dependencies": {
     "git@github.com:datcxx/buffer": "c0b73b9f",

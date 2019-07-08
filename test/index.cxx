@@ -37,24 +37,24 @@ int main() {
     Hyper::Util::Buffer<uint8_t> in("Hello, World!");
 
     {
-      Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES);
-      Hyper::Sodium::genericHash(out, in);
+      auto size = crypto_generichash_BYTES;
+      auto out = Hyper::Sodium::genericHash(in, size);
 
       std::string expected = "511bc81dde11180838c562c82bb35f3223f46061ebde4a955c27b3f489cf1e03";
       t->equal(out.toString("hex"), expected, "hashed buffer");
     }
 
     {
-      Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES_MIN);
-      Hyper::Sodium::genericHash(out, in);
+      auto size = crypto_generichash_BYTES_MIN;
+      auto out = Hyper::Sodium::genericHash(in, size);
 
       std::string expected = "3895c59e4aeb0903396b5be3fbec69fe";
       t->equal(out.toString("hex"), expected, "hashed buffer min");
     }
 
     {
-      Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES_MAX);
-      Hyper::Sodium::genericHash(out, in);
+      auto size = crypto_generichash_BYTES_MAX;
+      auto out = Hyper::Sodium::genericHash(in, size);
 
       std::string expected = "7dfdb888af71eae0e6a6b751e8e3413d767ef4fa52a7993daa9ef097f7aa3d949199c113caa37c94f80cf3b22f7d9d6e4f5def4ff927830cffe4857c34be3d89";
       t->equal(out.toString("hex"), expected, "hashed buffer max");
@@ -70,11 +70,26 @@ int main() {
     auto key = buf.fill("lo");
 
     {
-      Hyper::Util::Buffer<uint8_t> out(crypto_generichash_BYTES);
-      Hyper::Sodium::genericHash(out, in, key);
+      auto size = crypto_generichash_BYTES;
+      auto out = Hyper::Sodium::genericHash(in, key, size);
 
       std::string expected = "f4113fe33d43c24c54627d40efa1a78838d4a6d689fd6e83c213848904fffa8c";
       t->equal(out.toString("hex"), expected, "hashed buffer");
+    }
+
+    {
+      auto size = crypto_generichash_BYTES_MIN;
+      auto out = Hyper::Sodium::genericHash(in, key, size);
+
+      t->equal(out.toString("hex"), "c8226257b0d1c3dcf4bbc3ef79574689", "hashed buffer min");
+    }
+
+    {
+      auto size = crypto_generichash_BYTES_MAX;
+      auto out = Hyper::Sodium::genericHash(in, key, size);
+
+      auto res = "763eda46f4c6c61abb4310eb8a488950e9e0667b2fca03c463dc7489e94f065b7af6063fe86b0441c3eb9052800121d55730412abb2cbe0761b1d66f9b047c1c";
+      t->equal(out.toString("hex"), res, "hashed buffer max");
     }
 
     t->end();

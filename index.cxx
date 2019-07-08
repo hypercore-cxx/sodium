@@ -16,7 +16,9 @@ namespace Hyper {
         return s;
     }
 
-    void genericHash(Buf& out, const Buf& in) {
+    Buf genericHash(const Buf& in, size_t size) {
+      Buf out(size);
+
       crypto_generichash(
         &out.value[0],
         out.value.size(),
@@ -25,9 +27,13 @@ namespace Hyper {
         nullptr,
         0
       );
+
+      return out;
     }
 
-    void genericHash(Buf& out, const Buf& in, const Buf& key) {
+    Buf genericHash(const Buf& in, const Buf& key, size_t size) {
+      Buf out(size);
+
       crypto_generichash(
         &out.value[0],
         out.value.size(),
@@ -36,6 +42,8 @@ namespace Hyper {
         &key.value[0],
         key.value.size()
       );
+
+      return out;
     }
 
   } // namespace Sodium

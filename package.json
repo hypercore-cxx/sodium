@@ -18,7 +18,8 @@
   ],
   "files": [
     "index.hxx",
-    "index.cxx"
+    "index.cxx",
+    "src/generic.cxx"
   ],
   "devDependencies": {
     "git@github.com:heapwolf/cxx-tap": "d373e4be"
